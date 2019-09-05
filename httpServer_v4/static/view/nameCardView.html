@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="../style/nameCardView.css" />
+    <title>Print NameCard View</title>
+
+</head>
+
+<body>
+    <div id="root">
+        <div class="nameCard" v-for="nameCard in nameCards" v-bind:key="nameCard.id">
+            <hr />
+            <p>이름: {{nameCard.name}}</p>
+            <p>주소: {{nameCard.address}}</p>
+            <p>전화번호: {{nameCard.phone}}</p>
+            <hr />
+
+        </div>
+        <button v-on:click="onClickNextNameCard">다음 카드 불러오기</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        const app = new Vue({
+            el: "#root",
+            data: {
+                test: "안녕하세요",
+                nameCards: [],
+                id: 1,
+            },
+            created() {
+                this.getNameCardByID();
+            },
+            methods: {
+                onClickNextNameCard() {
+                    this.id = this.id + 1;
+                    this.getNameCardByID();
+                },
+                getNameCardByID() {
+                    fetch(`http://localhost/data?id=${this.id}`)
+                        .then((response) => {
+                            if (response.ok) {
+                                return response.json();
+                            }
+                            throw new Error('Network response was not ok');
+                        })
+                        .then((json) => {
+                            console.log(json)
+                            this.nameCards.push(json)
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
+                }
+            },
+
+        })
+    </script>
+</body>
+
+</html>
