@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Print NameCard View</title>
+</head>
+
+<body>
+    <div id="root">
+
+        <div>
+            <h1>현재버전은 V6 입니다.</h1>
+            <hr />
+            <p>이름: {{nameCards.name}}</p>
+            <p>주소: {{nameCards.address}}</p>
+            <p>전화번호: {{nameCards.phone}}</p>
+            <hr />
+        </div>
+        <button @click="onClickPreviosNameCard">이전</button>
+        <button @click="onClickNextNameCard">다음</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        const app = new Vue({
+            el: "#root",
+            data: {
+                nameCards: [],
+                nameCard_id: 1,
+            },
+            created() {
+                this.getNameCardByID();
+            },
+            methods: {
+                onClickPreviosNameCard() {
+                    if (this.nameCard_id < 2) {
+                        alert('처음입니다');
+                        return;
+                    }
+                    this.nameCard_id -= 1;
+                    this.getNameCardByID();
+
+                },
+                onClickNextNameCard() {
+                    this.nameCard_id += 1;
+                    this.getNameCardByID();
+                },
+                getNameCardByID() {
+                    const url = `http://localhost/data?id=${this.nameCard_id}`
+                    fetch(url)
+                        .then(response => {
+                            if (response.ok) {
+                                return response.json();
+                            } else {
+                                throw new Error('Network response was not ok');
+                            }
+                        })
+                        .then((json) => {
+                            console.log(json);
+                            this.nameCards = json
+                        })
+                        .catch((error) => {
+                            this.nameCard_id -= 1;
+                            alert("끝입니다.");
+                            console.log(error);
+                        });
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>
