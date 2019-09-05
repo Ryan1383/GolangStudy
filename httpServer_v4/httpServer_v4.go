@@ -55,7 +55,6 @@ func handleRootView(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	w.Header().Set("Content-Length", fmt.Sprint(len(data)))
 	fmt.Fprint(w, string(data))
 }
 
