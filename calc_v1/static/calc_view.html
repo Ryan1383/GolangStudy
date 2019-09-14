@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>String calc</title>
+
+</head>
+
+<body>
+    <div id="root">
+        <div>
+            <h1>문자열 계산기 V1 입니다 </h1>
+            <p>접속 포트: {{ui_portNumber}}</p>
+            <hr />
+            <input type="number" v-model="firstNumber" placeholder="계산값을 입력해주세요">
+            <button @click="onClickOperator('ADD')">+</button>
+            <button @click="onClickOperator('SUB')">-</button>
+            <button @click="onClickOperator('DIV')">÷</button>
+            <button @click="onClickOperator('MUL')">X</button>
+            <input type="number" v-model="secondNumber" placeholder="계산값을 입력해주세요">
+            <p>계산식 : {{firstNumber}} {{operator}} {{secondNumber}}</p>
+            <h1>결과 : {{ui_result}}</h1>
+        </div>
+        <button @click="getResultCalc">확인</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="/static/port.js"></script>
+    <script>
+        new Vue({
+            el: "#root",
+            data: {
+                ui_portNumber: portNumber,
+                firstNumber: '',
+                secondNumber: '',
+                operator: '',
+                ui_result: '',
+            },
+            methods: {
+                onClickOperator(operator) {
+                    this.operator = operator;
+                },
+                getResultCalc() {
+                    if (this.operator === '') {
+                        alert("연산자를 선택해주세요")
+                        return;
+                    }
+
+                    const url =
+                        `http://localhost:${portNumber}/calc?firstString=${this.firstNumber}&secondString=${this.secondNumber}&operator=${this.operator}`
+                    fetch(url)
+                        .then(response => {
+                            if (response.ok) {
+                                return response.json();
+                            } else {
+                                throw new Error('Network response was not ok');
+                            }
+                        })
+                        .then((json) => {
+                            console.log(json);
+                            this.ui_result = json.resultValue
+                            this.operator = '';
+                            this.firstNumber = '';
+                            this.secondNumber = '';
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>
