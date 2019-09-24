@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title> Go webSocket</title>
+
+    <script type="text/javascript">
+        var ws = new WebSocket("ws://127.0.0.1:3000/ws")
+
+        ws.onopen = () => {
+            console.log("conected")
+        }
+
+        ws.onmessage = msg => {
+            console.log("Server message : ", msg.data);
+        }
+        ws.onclose = () => {
+            console.log("Disconnected");
+        }
+
+        window.ws = ws;
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>
